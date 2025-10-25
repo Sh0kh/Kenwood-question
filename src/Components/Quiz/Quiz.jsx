@@ -20,7 +20,6 @@ export default function Quiz() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [finished, setFinished] = useState(false);
     const [questionAnimation, setQuestionAnimation] = useState("fade-in");
-
     // 🔹 Инициализация AOS
     useEffect(() => {
         AOS.init({ duration: 400, once: true });

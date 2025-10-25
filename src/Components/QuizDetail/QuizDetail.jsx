@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Quizs } from "../../utils/Controllers/Quizs";
 import { useEffect, useState } from "react";
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
-import { Download, Calendar, FileText, User, ArrowLeft } from "lucide-react";
+import { Download, Calendar, FileText, User, ArrowLeft, Phone, User as UserIcon, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../UI/Loadings/Loading";
 import html2pdf from "html2pdf.js";
@@ -10,6 +10,11 @@ import html2pdf from "html2pdf.js";
 export default function QuizDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { clientDate } = location.state || {};
+
+    console.log(clientDate);
+
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -46,6 +51,16 @@ export default function QuizDetail() {
                         padding-bottom: 20px;
                         border-bottom: 1px solid #ddd;
                     }
+                    .client-info {
+                        margin-bottom: 30px;
+                        padding: 15px;
+                        background: #f9f9f9;
+                        border-radius: 5px;
+                    }
+                    .client-info-item {
+                        margin-bottom: 8px;
+                        font-size: 14px;
+                    }
                     .result-item {
                         margin-bottom: 25px;
                         padding-bottom: 20px;
@@ -69,7 +84,7 @@ export default function QuizDetail() {
                     }
                     .summary {
                         margin-top: 30px;
-                        margin-bottom:60px;
+                        margin-bottom: 60px;
                         padding-top: 20px;
                         border-top: 1px solid #ddd;
                         text-align: center;
@@ -85,6 +100,15 @@ export default function QuizDetail() {
                 <div class="header">
                     <h1>Natijalari</h1>
                 </div>
+
+                ${clientDate ? `
+                    <div class="client-info">
+                        <div class="client-info-item"><strong>Ism:</strong> ${clientDate.fullName || 'Mavjud emas'}</div>
+                        <div class="client-info-item"><strong>Telefon:</strong> ${clientDate.phone || 'Mavjud emas'}</div>
+                        <div class="client-info-item"><strong>Izoh:</strong> ${clientDate.note || 'Mavjud emas'}</div>
+                        <div class="client-info-item"><strong>Sana:</strong> ${formatDate(clientDate.createdAt)}</div>
+                    </div>
+                ` : ''}
 
                 ${results.results.map((result, index) => `
                     <div class="result-item">
@@ -182,6 +206,48 @@ export default function QuizDetail() {
                         PDF Yuklab olish
                     </Button>
                 </div>
+
+                {/* Client Info */}
+                {clientDate && (
+                    <Card className="mb-6 border border-gray-200 rounded-lg shadow-none">
+                        <CardBody className="p-6">
+                            <Typography variant="h5" className="font-bold text-black mb-4 flex items-center gap-2">
+                                <UserIcon size={24} />
+                                Mijoz ma'lumotlari
+                            </Typography>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex items-center gap-3">
+                                    <User size={18} className="text-gray-600" />
+                                    <div>
+                                        <Typography className="text-sm text-gray-600">Ism</Typography>
+                                        <Typography className="font-medium">{clientDate.fullName}</Typography>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <Phone size={18} className="text-gray-600" />
+                                    <div>
+                                        <Typography className="text-sm text-gray-600">Telefon</Typography>
+                                        <Typography className="font-medium">{clientDate.phone}</Typography>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3 md:col-span-2">
+                                    <MessageCircle size={18} className="text-gray-600" />
+                                    <div>
+                                        <Typography className="text-sm text-gray-600">Izoh</Typography>
+                                        <Typography className="font-medium">{clientDate.note || "Izoh mavjud emas"}</Typography>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3 md:col-span-2">
+                                    <Calendar size={18} className="text-gray-600" />
+                                    <div>
+                                        <Typography className="text-sm text-gray-600">Sana</Typography>
+                                        <Typography className="font-medium">{formatDate(clientDate.createdAt)}</Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardBody>
+                    </Card>
+                )}
 
                 {/* Results List */}
                 <div className="space-y-6">

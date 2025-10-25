@@ -118,7 +118,7 @@ export default function ClientDetail() {
             {client.quizzes?.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {client.quizzes.map((quiz, index) => (
-                        <NavLink to={`/quiz/detail/${quiz?.id}`}>
+                        <NavLink state={{ clientDate: client }} to={`/quiz/detail/${quiz?.id}`}>
                             <Card
                                 key={quiz.id}
                                 className="relative p-3 border border-gray-100 shadow-md rounded-xl hover:shadow-lg transition"
